@@ -1,6 +1,10 @@
 package chess;
 
 import boardgame.Board;
+import boardgame.Position;
+import boardgame.Piece;
+import chess.pieces.King;
+import chess.pieces.Rook;
 
 public class ChessMatch {
     private Board board;
@@ -13,6 +17,7 @@ public class ChessMatch {
 
     public ChessMatch(){
         this.setBoard();
+        this.initialSetup();
     }      
     
     // Metodos para retornar matriz de xadrez
@@ -81,5 +86,11 @@ public class ChessMatch {
 
     public void setPromoted(ChessPiece promoted) {
         this.promoted = promoted;
+    }
+
+    private void initialSetup(){
+        this.board.placePiece(new Rook(this.board, Color.WHITE), new Position(2,1));
+        this.board.placePiece(new King(this.board, Color.BLACK), new Position(0,4));
+        this.board.placePiece(new Rook(this.board, Color.WHITE), new Position(7,4));
     }
 }
