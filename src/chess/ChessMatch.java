@@ -2,7 +2,6 @@ package chess;
 
 import boardgame.Board;
 import boardgame.Position;
-import boardgame.Piece;
 import chess.pieces.King;
 import chess.pieces.Rook;
 
@@ -29,6 +28,16 @@ public class ChessMatch {
             }
         }
         return matAux;
+    }
+
+    public void placeNewPiece(char colum, int row, ChessPiece piece){
+        this.board.placePiece(piece, new ChessPosition(colum, row).toPosition());
+    }
+
+    private void initialSetup(){
+        placeNewPiece('b', 6, new Rook(this.board, Color.WHITE));
+        placeNewPiece('e', 8, new King(this.board, Color.BLACK));
+        placeNewPiece('e', 1, new Rook(this.board, Color.WHITE));
     }
 
     // Metodos acessores
@@ -88,9 +97,4 @@ public class ChessMatch {
         this.promoted = promoted;
     }
 
-    private void initialSetup(){
-        this.board.placePiece(new Rook(this.board, Color.WHITE), new Position(2,1));
-        this.board.placePiece(new King(this.board, Color.BLACK), new Position(0,4));
-        this.board.placePiece(new Rook(this.board, Color.WHITE), new Position(7,4));
-    }
-}
+} 
