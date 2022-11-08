@@ -14,6 +14,7 @@ public class ChessPosition{
         this.setRow(row);
     }
 
+    //Posição de matriz
     protected Position toPosition(){
         return new Position(8 - this.getRow(), this.getColum() - 'a');
     }

@@ -1,5 +1,7 @@
 package boardgame;
 
+import chess.ChessPosition;
+
 public class Board {
     private int rows;
     private int colums;
@@ -26,7 +28,7 @@ public class Board {
             throw new BoardException("Erro: position not on the board");
         }      
         return pieces[position.getRow()][position.getColum()];
-    }
+    }    
 
     public void placePiece(Piece piece, Position position){
         if(thereIsApice(position)){
@@ -35,6 +37,20 @@ public class Board {
         this.pieces[position.getRow()][position.getColum()] = piece;
         piece.position = position;
     }
+
+    public Piece removePiece(Position position){
+        if(!positionExists(position)){
+            throw new BoardException("Erro: position not on the board");
+        }
+        if(piece(position) == null){
+            return null;
+        }
+
+        Piece aux = piece(position);
+        aux.position = null;
+        this.pieces[position.getRow()][position.getColum()] = null;
+        return aux;
+    }    
 
     public boolean positionExists(int row, int colum){
        return  row >= 0 && row < this.getRows() && colum >= 0 && colum < this.getColums();

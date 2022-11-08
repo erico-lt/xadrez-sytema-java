@@ -1,6 +1,7 @@
 package chess;
 
 import boardgame.Board;
+import boardgame.Piece;
 import boardgame.Position;
 import chess.pieces.King;
 import chess.pieces.Rook;
@@ -30,14 +31,46 @@ public class ChessMatch {
         return matAux;
     }
 
-    public void placeNewPiece(char colum, int row, ChessPiece piece){
-        this.board.placePiece(piece, new ChessPosition(colum, row).toPosition());
+    //Metodo para mover pecas
+    public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition){
+        Position source = sourcePosition.toPosition();
+        Position target = targetPosition.toPosition();
+        validateSourcePosition(source);
+        Piece capturedPiece = makeMove(source, target);
+        return (ChessPiece) capturedPiece;
     }
 
+    private Piece makeMove(Position source, Position target){
+        Piece p = this.board.removePiece(source);
+        Piece capturedPiece = this.board.removePiece(target);
+        this.board.placePiece(p, target);
+        return capturedPiece;
+    }
+
+    private void validateSourcePosition(Position position){
+        if(!this.board.thereIsApice(position)){
+            throw new ChessException("thore is no piece on source position");
+        }
+    }
+
+    public void placeNewPiece(char colum, int row, ChessPiece piece){
+        this.board.placePiece(piece, new ChessPosition(colum, row).toPosition());
+    }    
+
     private void initialSetup(){
-        placeNewPiece('b', 6, new Rook(this.board, Color.WHITE));
-        placeNewPiece('e', 8, new King(this.board, Color.BLACK));
-        placeNewPiece('e', 1, new Rook(this.board, Color.WHITE));
+        placeNewPiece('c', 1, new Rook(board, Color.WHITE));
+        placeNewPiece('c', 2, new Rook(board, Color.WHITE));
+        placeNewPiece('d', 2, new Rook(board, Color.WHITE));
+        placeNewPiece('e', 2, new Rook(board, Color.WHITE));
+        placeNewPiece('e', 1, new Rook(board, Color.WHITE));
+        placeNewPiece('d', 1, new King(board, Color.WHITE));
+
+        placeNewPiece('c', 7, new Rook(board, Color.BLACK));
+        placeNewPiece('c', 8, new Rook(board, Color.BLACK));
+        placeNewPiece('d', 7, new Rook(board, Color.BLACK));
+        placeNewPiece('e', 7, new Rook(board, Color.BLACK));
+        placeNewPiece('e', 8, new Rook(board, Color.BLACK));
+        placeNewPiece('d', 8, new King(board, Color.BLACK));
     }
 
     // Metodos acessores
