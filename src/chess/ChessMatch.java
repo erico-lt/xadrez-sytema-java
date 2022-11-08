@@ -49,7 +49,7 @@ public class ChessMatch {
 
     private void validateSourcePosition(Position position){
         if(!this.board.thereIsApice(position)){
-            throw new ChessException("thore is no piece on source position");
+            throw new ChessException("there is no piece on source position");
         }
     }
 
