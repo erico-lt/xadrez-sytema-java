@@ -31,6 +31,12 @@ public class ChessMatch {
         return matAux;
     }
 
+    public boolean[][] possibleMoves(ChessPosition sourcePosition){
+        Position position = sourcePosition.toPosition();
+        validateSourcePosition(position);
+        return this.board.piece(position).possibleMoves();
+    }
+
     //Metodo para mover pecas
     public ChessPiece performChessMove(ChessPosition sourcePosition, ChessPosition targetPosition){
         Position source = sourcePosition.toPosition();
