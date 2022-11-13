@@ -16,6 +16,8 @@ public class ChessMatch {
     private ChessPiece promoted;
 
     public ChessMatch(){
+        this.setTurn(1);
+        this.setCurrentPlayer(Color.WHITE);
         this.setBoard();
         this.initialSetup();
     }      
@@ -44,6 +46,7 @@ public class ChessMatch {
         validateSourcePosition(source);
         validateTargetPosition(source, target);
         Piece capturedPiece = makeMove(source, target);
+        nextTurn();
         return (ChessPiece) capturedPiece;
     }
 
@@ -58,6 +61,9 @@ public class ChessMatch {
         if(!this.board.thereIsApice(position)){
             throw new ChessException("there is no piece on source position");
         }
+        if(this.getCurrentPlayer() != ((ChessPiece)this.getBoard().piece(position)).getColor() ){
+            throw new ChessException("The chosen piece in not yours");
+        }
         if(!this.board.piece(position).isThereAnyPossibleMove()){
             throw new ChessException("There is no possible moves for the chosen piece");
         }
@@ -67,6 +73,16 @@ public class ChessMatch {
         if(!this.board.piece(source).possibleMove(target)){
             throw new ChessException("The chosen piece can`t move to target position");
         }
+    }
+
+    private Color newCurrentPlayer(){
+        Color aux = (this.getCurrentPlayer() == Color.WHITE) ? Color.BLACK : Color.WHITE;
+        return aux;
+    }
+
+    private void nextTurn(){
+        this.setTurn(this.getTurn() + 1);
+        this.setCurrentPlayer(newCurrentPlayer());
     }
 
     public void placeNewPiece(char colum, int row, ChessPiece piece){
@@ -102,7 +118,7 @@ public class ChessMatch {
         return turn;
     }
 
-    public void setTurn(int turn) {
+    private void setTurn(int turn) {
         this.turn = turn;
     }
 
@@ -110,7 +126,7 @@ public class ChessMatch {
         return currentPlayer;
     }
 
-    public void setCurrentPlayer(Color currentPlayer) {
+    private void setCurrentPlayer(Color currentPlayer) {
         this.currentPlayer = currentPlayer;
     }
 
