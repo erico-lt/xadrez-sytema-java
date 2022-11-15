@@ -14,13 +14,14 @@ public class ChessPosition{
         this.setRow(row);
     }
 
-    //Posição de matriz
+    //retorna posição de matriz
     protected Position toPosition(){
         return new Position(8 - this.getRow(), this.getColum() - 'a');
     }
 
+    //retorna posição de tabuleiro
     protected static ChessPosition fromPosition(Position position){
-        return new ChessPosition((char) ('a' - position.getColum()), 8 - position.getRow());
+        return new ChessPosition((char) ('a' + position.getColum()), 8 - position.getRow());
     }
 
     public char getColum() {
