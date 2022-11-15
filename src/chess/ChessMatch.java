@@ -61,7 +61,12 @@ public class ChessMatch {
 
         this.check = testCheck(oponnet(this.getCurrentPlayer()))? true : false;
 
-        nextTurn();
+        if(testCheck(oponnet(this.getCurrentPlayer()))) {
+            this.checkMate = true;
+        } else {
+            nextTurn();
+        }
+                
         return (ChessPiece) capturedPiece;
     }
 
@@ -144,25 +149,45 @@ public class ChessMatch {
         return false;
     }
 
+    private boolean testCheckMate(Color color) {
+        if(!testCheck(color)) {
+            return false;
+        }
+        List<Piece> list = this._piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == color).collect(Collectors.toList());
+        for(Piece p : list) {
+            boolean mat[][] = p.possibleMoves();
+            for(int row = 0; row < this.board.getRows(); row++) {
+                for(int colum = 0; colum < this.board.getColums(); colum ++) {
+                    if(mat[row][colum]) {
+                        Position source = ((ChessPiece)p).getChessPosition().toPosition();
+                        Position target = new Position(row, colum);
+                        Piece capturedPiece = makeMove(source, target);
+                        boolean testCheck = testCheck(color);
+                        undoMove(source, target, capturedPiece);
+                        if(!testCheck) {
+                            return false;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+
     public void placeNewPiece(char colum, int row, ChessPiece piece){
         this.board.placePiece(piece, new ChessPosition(colum, row).toPosition());
         this._piecesOnTheBoard.add(piece);
     }    
 
     private void initialSetup(){
-        placeNewPiece('c', 1, new Rook(board, Color.WHITE));
-        placeNewPiece('c', 2, new Rook(board, Color.WHITE));
-        placeNewPiece('d', 2, new Rook(board, Color.WHITE));
-        placeNewPiece('e', 2, new Rook(board, Color.WHITE));
-        placeNewPiece('e', 1, new Rook(board, Color.WHITE));
-        placeNewPiece('d', 1, new King(board, Color.WHITE));
-
-        placeNewPiece('c', 7, new Rook(board, Color.BLACK));
-        placeNewPiece('c', 8, new Rook(board, Color.BLACK));
-        placeNewPiece('d', 7, new Rook(board, Color.BLACK));
-        placeNewPiece('e', 7, new Rook(board, Color.BLACK));
-        placeNewPiece('e', 8, new Rook(board, Color.BLACK));
-        placeNewPiece('d', 8, new King(board, Color.BLACK));
+        placeNewPiece('h', 7, new Rook(board, Color.WHITE));
+        placeNewPiece('d', 1, new Rook(board, Color.WHITE));        
+        placeNewPiece('e', 1, new King(board, Color.WHITE));
+        
+        placeNewPiece('b', 8, new Rook(board, Color.BLACK));
+        placeNewPiece('a', 8, new King(board, Color.BLACK));
     }
 
     // Metodos acessores

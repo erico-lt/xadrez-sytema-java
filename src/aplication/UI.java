@@ -55,10 +55,16 @@ public class UI {
         printCapturedPieces(captured);
         System.out.println();
         System.out.println("Turn: " + chessmatch.getTurn());
-        System.out.println("Waiting player: " + chessmatch.getCurrentPlayer());
-        if(chessmatch.getCheck()){
-            System.out.println("CHECK!");
+        if(!chessmatch.getCheckMate()) {
+            System.out.println("Waiting player: " + chessmatch.getCurrentPlayer());
+            if(chessmatch.getCheck()){
+                System.out.println("CHECK!");
+            }
+        } else {
+            System.out.println("CHECKMATE");
+            System.out.println("Winner: " + chessmatch.getCurrentPlayer());
         }
+        
     }
     
     public static void printBoard(ChessPiece[][] pieces){
