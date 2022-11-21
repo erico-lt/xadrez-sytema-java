@@ -68,7 +68,7 @@ public class ChessMatch {
 
         this.check = testCheck(oponnet(this.getCurrentPlayer()))? true : false;
 
-        if(testCheck(oponnet(this.getCurrentPlayer()))) {
+        if(testCheckMate(oponnet(this.getCurrentPlayer()))) {
             this.checkMate = true;
         } else {
             nextTurn();
@@ -112,6 +112,20 @@ public class ChessMatch {
             getBoard().placePiece(rook, targetT);
             rook.increaseMoveCount();
         }
+        //Moviemnto especial en passant
+        if(p instanceof Pawn) {
+            if(source.getColum() != target.getColum() && capturedPiece == null) {
+                Position pawPosition;
+                if(p.getColor() == Color.WHITE) {
+                    pawPosition = new Position(target.getRow() + 1, target.getColum());
+                } else {
+                    pawPosition = new Position(target.getRow() - 1, target.getColum());
+                } 
+                capturedPiece = getBoard().removePiece(pawPosition);
+                this._capturedPieces.add(capturedPiece);
+                this._piecesOnTheBoard.remove(capturedPiece);
+            }
+        }
 
         return capturedPiece;
     }
@@ -143,6 +157,20 @@ public class ChessMatch {
             ChessPiece rook = (ChessPiece)getBoard().removePiece(targetT); 
             getBoard().placePiece(rook, sourceT);            
             rook.decreseMoveCount();
+        }
+
+         //Moviemnto especial en passant
+         if(p instanceof Pawn) {
+            if(source.getColum() != target.getColum() && capturedPiece == this.enPassantVunerable) {
+                ChessPiece pawn = (ChessPiece)getBoard().removePiece(target);
+                Position pawPosition;
+                if(p.getColor() == Color.WHITE) {
+                    pawPosition = new Position(3, target.getColum());
+                } else {
+                    pawPosition = new Position(4, target.getColum());
+                } 
+                getBoard().placePiece(pawn, pawPosition);
+            }
         }
 
     }
@@ -200,7 +228,7 @@ public class ChessMatch {
                 return true;
             }
         }
-        return false;
+        return false;        
     }
 
     private boolean testCheckMate(Color color) {
@@ -221,7 +249,6 @@ public class ChessMatch {
                         if(!testCheck) {
                             return false;
                         }
-
                     }
                 }
             }
@@ -256,6 +283,7 @@ public class ChessMatch {
         placeNewPiece('a', 8, new Rook(board, Color.BLACK));
         placeNewPiece('b', 8, new Night(board, Color.BLACK)); 
         placeNewPiece('c', 8, new Bishop(board, Color.BLACK));
+        placeNewPiece('d', 8, new Queen(board, Color.BLACK));
         placeNewPiece('e', 8, new King(board, Color.BLACK, this));
         placeNewPiece('f', 8, new Bishop(board, Color.BLACK));
         placeNewPiece('g', 8, new Night(board, Color.BLACK));
