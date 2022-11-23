@@ -1,5 +1,6 @@
 package chess;
 
+import java.security.InvalidParameterException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -66,6 +67,16 @@ public class ChessMatch {
 
         ChessPiece movedPiece = (ChessPiece)getBoard().piece(target);
 
+        //Especial move promoted Piece
+        this.promoted = null;
+        if(movedPiece instanceof Pawn) {
+            if ((target.getRow() == 0 && movedPiece.getColor() == Color.WHITE) || (target.getRow() == 7 && movedPiece.getColor() == Color.BLACK)) {
+                this.promoted = (ChessPiece)getBoard().piece(target);
+                this.promoted = replacePromotedPiece("Q");
+            }
+        }
+        
+
         this.check = testCheck(oponnet(this.getCurrentPlayer()))? true : false;
 
         if(testCheckMate(oponnet(this.getCurrentPlayer()))) {
@@ -82,6 +93,30 @@ public class ChessMatch {
         }
                 
         return (ChessPiece) capturedPiece;
+    }
+
+    public ChessPiece replacePromotedPiece(String type) {
+        if (this.promoted == null) {
+            throw new IllegalStateException("There is no piece to be promoted");
+        }
+        if (!type.equals("B") && !type.equals("N") && !type.equals("R") && !type.equals("Q")) {
+            throw new InvalidParameterException("Invalid type for promotion");
+        }
+        
+        Position pos = this.promoted.getChessPosition().toPosition();
+        Piece p = getBoard().removePiece(pos);
+        this._piecesOnTheBoard.remove(p);
+        ChessPiece newPiece = newPiece(type, promoted.getColor());
+        getBoard().placePiece(newPiece, pos);
+        this._piecesOnTheBoard.add(newPiece);
+        return newPiece;
+    }   
+
+    private ChessPiece newPiece(String type, Color color) {
+        if(type.equals("B")) return new Bishop(board, color);
+        if(type.equals("N")) return new Night(board, color); 
+        if(type.equals("Q")) return new Queen(board, color);
+        return new Rook(board, color);
     }
 
     private Piece makeMove(Position source, Position target){
