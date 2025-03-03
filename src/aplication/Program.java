@@ -1,16 +1,12 @@
 package aplication;
 
+import chess.*;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-import chess.ChessException;
-import chess.ChessMatch;
-import chess.ChessPiece;
-import chess.ChessPosition;
-
-public class Aplication {
+public class Program {
     public static void main(String[] args) throws Exception {
         Scanner sc = new Scanner(System.in);
         ChessMatch chessMatch = new ChessMatch();
